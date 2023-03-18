@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 import {
   Box,
@@ -11,11 +12,97 @@ import {
   Heading,
   Highlight,
   Input,
-  Text,
 } from "@chakra-ui/react";
 
 export default () => {
   const [authState, setAuthState] = useState("Login");
+
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  // const [loggedInUser, setLoggedInUser] = useState({
+  //   email,
+  //   username,
+  //   password,
+  //   confirmPassword,
+  // });
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const loggedInUser = { email, username, password, confirmPassword };
+  // const loggedInUser = {
+  //   email: email,
+  //   username: username,
+  //   password: password,
+  //   confirmPassword: confirmPassword,
+  // }
+
+  const authenticate = (authState) => {
+    // const loggedInUser = { email, username, password, confirmPassword };
+
+    fetch("https://g5jd7s-8080.csb.app/auth", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(loggedInUser),
+      // body: JSON.stringify({
+      //   email: "test@email.com",
+      //   username: "test",
+      //   password: "secret",
+      //   confirmPassword: "secret",
+      // }),
+      // // // body: JSON.stringify({
+      // // //   email: loggedInUser.email,
+      // // //   username: loggedInUser.username,
+      // // //   password: loggedInUser.password,
+      // // //   confirmPassword: loggedInUser.confirmPassword,
+      // // // }),
+      // // // body: JSON.stringify({
+      // // //   email: "test@email.com",
+      // // //   username: "test",
+      // // //   password: "secret",
+      // // //   confirmPassword: "secret",
+      // // // }),
+    })
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+
+    // {authState === "Login" ? loggedInUser = {username, email} : loggedInUser = {username, email}}
+    // setLoggedInUser({email: })
+    // console.log(email);
+
+    // setLoggedInUser({ email: email, username, password, confirmPassword });
+
+    console.log("loggedInUser");
+    console.log(loggedInUser);
+
+    //   axios
+    //     .post("/auth", {
+    //       headers: {
+    //         "Content-type": "application/json",
+    //       },
+    //       // data: {
+    //       //   loggedInUser,
+    //       // },
+    //       data: { user: "Mr Bean" },
+    //     })
+    //     .then((response) => console.log(response))
+    //     .catch((err) => console.error(err));
+  };
 
   // const secondaryButton = document.querySelector("#button");
 
@@ -47,7 +134,13 @@ export default () => {
             >
               <FormControl>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" placeholder="user1@email.com" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="user1@email.com"
+                  onChange={handleEmail}
+                  value={loggedInUser.email}
+                />
                 <FormHelperText color="orange.300" mt="1rem">
                   Please enter your email here.
                 </FormHelperText>
@@ -56,7 +149,12 @@ export default () => {
               {authState === "Register" && (
                 <FormControl>
                   <FormLabel>Username</FormLabel>
-                  <Input type="text" placeholder="user1" />
+                  <Input
+                    type="text"
+                    placeholder="user1"
+                    onChange={handleUsername}
+                    value={loggedInUser.username}
+                  />
                   <FormHelperText color="orange.300" mt="1rem">
                     Please enter your email here.
                   </FormHelperText>
@@ -65,7 +163,12 @@ export default () => {
 
               <FormControl>
                 <FormLabel>Password</FormLabel>
-                <Input type="password" placeholder="••••••••••••" />
+                <Input
+                  type="password"
+                  placeholder="••••••••••••"
+                  onChange={handlePassword}
+                  value={loggedInUser.password}
+                />
                 <FormHelperText color="orange.300" mt="1rem">
                   Please enter your password here.
                 </FormHelperText>
@@ -74,7 +177,12 @@ export default () => {
               {authState === "Register" && (
                 <FormControl>
                   <FormLabel>Confirm Password</FormLabel>
-                  <Input type="email" placeholder="••••••••••••" />
+                  <Input
+                    type="email"
+                    placeholder="••••••••••••"
+                    onChange={handleConfirmPassword}
+                    value={loggedInUser.confirmPassword}
+                  />
                   <FormHelperText color="orange.300" mt="1rem">
                     Please enter your email here.
                   </FormHelperText>
@@ -82,7 +190,9 @@ export default () => {
               )}
 
               <Box w="20rem" alignSelf="center" mt="4">
-                <Button width="20rem">{authState}</Button>
+                <Button width="20rem" onClick={authenticate}>
+                  {authState}
+                </Button>
               </Box>
 
               <Button

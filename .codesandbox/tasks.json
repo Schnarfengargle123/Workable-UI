@@ -32,6 +32,14 @@
     "npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion": {
       "name": "npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion",
       "command": "npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion"
+    },
+    "npm i axios": {
+      "name": "npm i axios",
+      "command": "npm i axios"
+    },
+    "npm install axios": {
+      "name": "npm install axios",
+      "command": "npm install axios"
     }
   }
 }
