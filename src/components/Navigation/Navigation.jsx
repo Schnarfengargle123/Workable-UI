@@ -1,6 +1,7 @@
 import { Box, Flex, Link } from "@chakra-ui/react";
 
-export default () => {
+export default (props) => {
+  // export default ({setCurrentPage}) => {
   return (
     <Box
       bg="teal.200"
@@ -15,7 +16,16 @@ export default () => {
 
         <Box w="15%">
           <Flex direction="row" justify="space-around" align="center">
-            <Link>Shift Manager</Link>
+            <Link onClick={() => props.setCurrentPage("holidays")}>
+              Holidays
+            </Link>
+            <Link
+              onClick={() => {
+                props.setCurrentPage("shift_manager");
+              }}
+            >
+              Shift Manager
+            </Link>
             <Link>Logout</Link>
           </Flex>
         </Box>

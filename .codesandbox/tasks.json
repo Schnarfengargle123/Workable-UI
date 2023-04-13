@@ -40,6 +40,18 @@
     "npm install axios": {
       "name": "npm install axios",
       "command": "npm install axios"
+    },
+    "npm i @chakra-ui/icons": {
+      "name": "npm i @chakra-ui/icons",
+      "command": "npm i @chakra-ui/icons"
+    },
+    "npm upgrade": {
+      "name": "npm upgrade",
+      "command": "npm upgrade"
+    },
+    "npm update": {
+      "name": "npm update",
+      "command": "npm update"
     }
   }
 }

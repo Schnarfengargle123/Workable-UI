@@ -14,20 +14,14 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-export default () => {
+export default ({ currentPage, setCurrentPage }) => {
+  // export default (props) => {
   const [authState, setAuthState] = useState("Login");
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  // const [loggedInUser, setLoggedInUser] = useState({
-  //   email,
-  //   username,
-  //   password,
-  //   confirmPassword,
-  // });
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -45,73 +39,71 @@ export default () => {
   };
 
   const loggedInUser = { email, username, password, confirmPassword };
-  // const loggedInUser = {
-  //   email: email,
-  //   username: username,
-  //   password: password,
-  //   confirmPassword: confirmPassword,
-  // }
 
-  const authenticate = (authState) => {
-    // const loggedInUser = { email, username, password, confirmPassword };
+  const authenticate = () => {
+    // Using FetchAPI
 
-    fetch("https://g5jd7s-8080.csb.app/auth", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(loggedInUser),
-      // body: JSON.stringify({
-      //   email: "test@email.com",
-      //   username: "test",
-      //   password: "secret",
-      //   confirmPassword: "secret",
-      // }),
-      // // // body: JSON.stringify({
-      // // //   email: loggedInUser.email,
-      // // //   username: loggedInUser.username,
-      // // //   password: loggedInUser.password,
-      // // //   confirmPassword: loggedInUser.confirmPassword,
-      // // // }),
-      // // // body: JSON.stringify({
-      // // //   email: "test@email.com",
-      // // //   username: "test",
-      // // //   password: "secret",
-      // // //   confirmPassword: "secret",
-      // // // }),
+    // fetch("https://g5jd7s-8080.csb.app/auth", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   body: JSON.stringify(loggedInUser),
+    // })
+    //   .then((response) => {
+    //     console.log("Response: ", response);
+
+    //     // const token = response.json();
+    //     // console.log("TOKEN: ", token);
+
+    //     // document.cookie = `token=${token}`;
+    //   })
+    //   .catch((err) => console.error(err));
+
+    // ==================================================
+
+    // Using Axios
+
+    // axios
+    //   .post("/auth", loggedInUser, {
+    //     headers: {
+    //       "Content-type": "application/json",
+    //     },
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+
+    //     // const token = response.json();
+    //     // console.log("TOKEN: ", token);
+
+    //     // document.cookie = `token=${token}`;
+    //   })
+    //   .catch((err) => console.error(err));
+
+    // ==================================================
+
+    // Using Axios (Alternative Syntax)
+
+    axios({
+      method: "post",
+      url: "/auth",
+      data: loggedInUser,
     })
-      .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response);
+
+        const token = response.data.token;
+        console.log("TOKEN: ", token);
+
+        document.cookie = `token=${token}`;
+      })
       .catch((err) => console.error(err));
 
-    // {authState === "Login" ? loggedInUser = {username, email} : loggedInUser = {username, email}}
-    // setLoggedInUser({email: })
-    // console.log(email);
-
-    // setLoggedInUser({ email: email, username, password, confirmPassword });
+    setCurrentPage("welcome");
 
     console.log("loggedInUser");
     console.log(loggedInUser);
-
-    //   axios
-    //     .post("/auth", {
-    //       headers: {
-    //         "Content-type": "application/json",
-    //       },
-    //       // data: {
-    //       //   loggedInUser,
-    //       // },
-    //       data: { user: "Mr Bean" },
-    //     })
-    //     .then((response) => console.log(response))
-    //     .catch((err) => console.error(err));
   };
-
-  // const secondaryButton = document.querySelector("#button");
-
-  // if (authState === "Login") {
-  //   // const secondaryButton = document.querySelector("#secondary-button");
-  //   secondaryButton.innerHTML = "or Register";
-  // } else {
-  //   secondaryButton.innerHTML = "or Login";
-  // }
 
   return (
     <Center>
@@ -127,7 +119,6 @@ export default () => {
             <Box
               w="80%"
               minH={authState === "Login" ? "28rem" : "42rem"}
-              // minH="42rem"
               display="flex"
               flexDirection="column"
               justifyContent="space-evenly"

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import axios from "axios";
+
 import ShiftFilter from "./ShiftFilter";
 import CreateShift from "./CreateShift";
 import ShiftRecord from "./ShiftRecord";
@@ -7,6 +9,7 @@ import ShiftRecord from "./ShiftRecord";
 import {
   Avatar,
   Box,
+  Center,
   Flex,
   Table,
   Thead,
@@ -23,6 +26,12 @@ import {
 
 export default () => {
   const [shiftData, setShiftData] = useState([]);
+  const [employeeData, setEmployeeData] = useState([]);
+
+  // // const [employeeInputValue, setEmployeeInputValue] = useState();
+  // // const [shiftDateInputValue, setShiftDateInputValue] = useState();
+  // // const [startTimeInputValue, setStartTimeInputValue] = useState();
+  // // const [endTimeInputValue, setEndTimeInputValue] = useState();
 
   useEffect(() => {
     let tempShiftData;
@@ -37,39 +46,82 @@ export default () => {
         setShiftData(tempShiftData);
       })
       .catch((err) => console.error(err));
+
+    let tempData;
+
+    axios
+      .get("/staff")
+      .then((response) => {
+        console.log(response);
+        tempData = response.data;
+      })
+      .then(() => {
+        console.log(tempData);
+        setEmployeeData(tempData);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
+  // useEffect(() => {
+  //   let tempData;
+
+  //   axios
+  //     .get("/staff")
+  //     .then((response) => {
+  //       console.log(response);
+  //       tempData = response.data;
+  //     })
+  //     .then(() => {
+  //       console.log(tempData);
+  //       setemployeeData(tempData);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
   return (
-    <Box>
-      <Flex direction="row">
-        <ShiftFilter />
-        <CreateShift />
-      </Flex>
+    <Center mt="4rem">
+      <Box w="90%" px="1rem">
+        <Flex direction="column">
+          {/* <ShiftFilter /> */}
+          <CreateShift
+            employeeData={employeeData}
+            employeeInput
+            shiftDateInput
+            startTimeInput
+            endTimeInput
+          />
+        </Flex>
 
-      <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Employee</Th>
-              <Th>Shift Date</Th>
-              <Th>Start Time</Th>
-              <Th>End Time</Th>
-              <Th>Duration</Th>
-            </Tr>
-          </Thead>
+        <TableContainer mt="8rem">
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Employee</Th>
+                <Th>Shift Date</Th>
+                <Th>Start Time</Th>
+                <Th>End Time</Th>
+                <Th>Duration</Th>
+                <Th></Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
 
-          {shiftData.map((shift) => (
-            <ShiftRecord
-              employee={shift.employee}
-              date={shift.date}
-              startTime={shift.start_time}
-              finishTime={shift.finish_time}
-              duration={shift.duration}
-            />
-            // <h2>{shift.duration}</h2>
-          ))}
+            {shiftData.map((shift) => (
+              <ShiftRecord
+                id={shift.id}
+                date={shift.date}
+                startTime={shift.start_time}
+                finishTime={shift.finish_time}
+                duration={shift.duration}
+                employeeId={shift.employee.employeeId}
+                employee={shift.employee.username}
+                // employeeData
+                employeeData={employeeData}
+              />
+              // <h2>{shift.duration}</h2>
+            ))}
 
-          {/* <Tbody>
+            {/* <Tbody>
             <Tr>
               <Td>
                 <Avatar />
@@ -85,16 +137,17 @@ export default () => {
             </Tr>
           </Tbody> */}
 
-          {/* <Tfoot>
+            {/* <Tfoot>
             <Tr>
               <Th>To convert</Th>
               <Th>into</Th>
               <Th isNumeric>multiply by</Th>
             </Tr>
           </Tfoot> */}
-          <TableCaption>Shift Manager View</TableCaption>
-        </Table>
-      </TableContainer>
-    </Box>
+            <TableCaption>Shift Manager View</TableCaption>
+          </Table>
+        </TableContainer>
+      </Box>
+    </Center>
   );
 };
