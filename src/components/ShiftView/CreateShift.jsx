@@ -13,9 +13,9 @@ import axios from "axios";
 
 export default ({ employeeData }) => {
   const employeeInput = useRef();
-  const shiftDateInput = useRef();
+  const dateInput = useRef();
   const startTimeInput = useRef();
-  const endTimeInput = useRef();
+  const finishTimeInput = useRef();
 
   const [selectedEmployee, setSelectedEmployee] = useState();
   const [filteredShiftData, setFilteredShiftData] = useState();
@@ -25,10 +25,10 @@ export default ({ employeeData }) => {
 
     const getShiftDuration = () => {
       const startDateTime = new Date(
-        `${shiftDateInput.current.value} ${startTimeInput.current.value}:00`
+        `${dateInput.current.value} ${startTimeInput.current.value}:00`
       );
       const endDateTime = new Date(
-        `${shiftDateInput.current.value} ${endTimeInput.current.value}:00 `
+        `${dateInput.current.value} ${finishTimeInput.current.value}:00 `
       );
 
       const shiftDuration = `${Math.floor(
@@ -41,8 +41,8 @@ export default ({ employeeData }) => {
     const shiftDuration = getShiftDuration();
     console.log("shiftDuration: ", shiftDuration);
 
-    // const startDateTime = `${shiftDateInput.current.value} ${startTimeInput.current.value}:00`;
-    // const endDateTime = `${shiftDateInput.current.value} ${startTimeInput.current.value}:00`;
+    // const startDateTime = `${dateInput.current.value} ${startTimeInput.current.value}:00`;
+    // const endDateTime = `${dateInput.current.value} ${startTimeInput.current.value}:00`;
 
     // console.log("startDateTime: ", startDateTime);
     // console.log("endDateTime: ", endDateTime);
@@ -65,23 +65,23 @@ export default ({ employeeData }) => {
 
     const createdShift = {
       // BUG: Obtains LAST option value, and not selected value.
-      employee: employeeInput.current.innerHTML,
-      shiftDate: shiftDateInput.current.value,
+      date: dateInput.current.value,
       startTime: startTimeInput.current.value,
-      endTime: endTimeInput.current.value,
+      finishTime: finishTimeInput.current.value,
       duration: shiftDuration,
-      // shiftDate: shiftDateInput.current.value,
+      employee: parseInt(employeeInput.current.value),
+      // date: dateInput.current.value,
       // startTime: startTimeInput.current.value,
-      // endTime: endTimeInput.current.value,
+      // finishTime: finishTimeInput.current.value,
     };
 
     console.log("Created Shift: ", createdShift);
 
     console.log("INPUTS");
     console.log(employeeInput.current);
-    console.log(shiftDateInput.current);
+    console.log(dateInput.current);
     console.log(startTimeInput.current);
-    console.log(endTimeInput.current);
+    console.log(finishTimeInput.current);
 
     axios({
       method: "post",
@@ -96,13 +96,13 @@ export default ({ employeeData }) => {
     // const filteredShiftData = {
     //   // BUG: Obtains LAST option value, and not selected value.
     //   employee: employeeInput.current.innerHTML,
-    //   shiftDate: shiftDateInput.current.value,
+    //   date: dateInput.current.value,
     //   startTime: startTimeInput.current.value,
-    //   endTime: endTimeInput.current.value,
+    //   finishTime: finishTimeInput.current.value,
     //   duration: shiftDuration,
-    //   // shiftDate: shiftDateInput.current.value,
+    //   // date: dateInput.current.value,
     //   // startTime: startTimeInput.current.value,
-    //   // endTime: endTimeInput.current.value,
+    //   // finishTime: finishTimeInput.current.value,
     // };
 
     const queryString = "?start_time=09:00&finish_time=18:00";
@@ -175,7 +175,7 @@ export default ({ employeeData }) => {
               //   console.log(e);
               // }}
               ref={employeeInput}
-              value="Employee"
+              value={employee.id}
             >
               {employee.username}
               {/* <Avatar size="2xs" /> */}
@@ -183,9 +183,9 @@ export default ({ employeeData }) => {
           ))}
         </Select>
 
-        <Input ref={shiftDateInput} type="date" w="10rem" mr="2rem" />
+        <Input ref={dateInput} type="date" w="10rem" mr="2rem" />
         <Input ref={startTimeInput} type="time" w="8rem" mr="4rem" />
-        <Input ref={endTimeInput} type="time" w="8rem" mr="6rem" />
+        <Input ref={finishTimeInput} type="time" w="8rem" mr="6rem" />
       </Stack>
 
       <Stack direction="row" spacing="1rem">
