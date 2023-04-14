@@ -12,9 +12,11 @@ import {
 import axios from "axios";
 
 export default ({ employeeData }) => {
-  const employeeInput = useRef();
+  let employeeInput = "";
+  // const employeeInput = useRef();
   const dateInput = useRef();
   const startTimeInput = useRef();
+  // const finishTimeInput = useRef();
   const finishTimeInput = useRef();
 
   const [selectedEmployee, setSelectedEmployee] = useState();
@@ -69,7 +71,8 @@ export default ({ employeeData }) => {
       startTime: startTimeInput.current.value,
       finishTime: finishTimeInput.current.value,
       duration: shiftDuration,
-      employee: parseInt(employeeInput.current.value),
+      // employee: parseInt(employeeInput.current.value),
+      employee: parseInt(employeeInput),
       // date: dateInput.current.value,
       // startTime: startTimeInput.current.value,
       // finishTime: finishTimeInput.current.value,
@@ -153,16 +156,39 @@ export default ({ employeeData }) => {
   //     .catch((err) => console.log(err));
   // }, []);
 
+  const handleSelectEmployee = (e) => {
+    // POTENTIAL BUG: If employee `id` field is not equal to index position,
+    // i.e, admin has id of 1, but 3rd element in array, then selectedInputValue
+    // assigns the shift instance to the wrong user (the user with an id of 3).
+    // id should in fact be equal to 1, to assign the shift to the correct user,
+    // i.e, the admin user.
+
+    const selectedInputValue = e.target[e.target.selectedIndex].value;
+
+    console.log(
+      "Value: " +
+        e.target.value +
+        "; Display: " +
+        e.target[e.target.selectedIndex].text +
+        "."
+    );
+
+    console.log(selectedInputValue);
+
+    employeeInput = selectedInputValue;
+
+    return selectedInputValue;
+  };
+
+  //   function getSelectedValue(event) {
+  //    console.log("Value: " + event.target.value + "; Display: " + event.target[event.target.selectedIndex].text + ".");
+  // }
+
   return (
     <Flex direction="row" justify="space-between" w="100%" px="1rem">
       <Stack direction="row" spacing="2rem">
         <Select
-          // onChange={(e) => {
-          //   // setSelectedEmployee(e.options[e.selectedIndex].text);
-          //   setSelectedEmployee(e.target[e.selectedIndex].text);
-          //   console.log(selectedEmployee);
-          //   // console.log(e);
-          // }}
+          onChange={handleSelectEmployee}
           placeholder="Choose Employee"
           w="12rem"
         >
@@ -174,7 +200,7 @@ export default ({ employeeData }) => {
               //   console.log(selectedEmployee);
               //   console.log(e);
               // }}
-              ref={employeeInput}
+              // ref={employeeInput}
               value={employee.id}
             >
               {employee.username}
