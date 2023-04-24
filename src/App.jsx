@@ -11,51 +11,65 @@ import HolidayView from "./components/HolidayView/HolidayView";
 import ShiftView from "./components/ShiftView/ShiftView";
 
 axios.defaults.baseURL = "https://g5jd7s-8080.csb.app";
+// axios.defaults.baseURL = "http://localhost:8080.csb.app";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(false);
+
   const [currentPage, setCurrentPage] = useState("auth");
   const [employeeData, setEmployeeData] = useState();
+  const [shiftsData, setShiftsData] = useState();
+  const [holidaysData, setHolidaysData] = useState();
 
   useEffect(() => {
-    let tempData;
-
     axios
       .get("/staff")
       .then((response) => {
-        console.log(response);
-        tempData = response.data;
+        console.log("Fetching employeeData: ", response);
+        setEmployeeData(response.data);
       })
-      .then(() => {
-        console.log(tempData);
-        setEmployeeData(tempData);
+      .catch((err) => console.log(err));
+
+    axios
+      .get("/shifts")
+      .then((response) => {
+        console.log("Fetching shiftsData: ", response);
+        setShiftsData(response.data);
+      })
+      .catch((err) => console.log(err));
+
+    axios
+      .get("/holidays")
+      .then((response) => {
+        console.log("Fetching holidaysData: ", response);
+        setHolidaysData(response.data);
       })
       .catch((err) => console.log(err));
   }, []);
+
+  console.log("Employee Data: ", employeeData);
+  console.log("Shifts Data: ", shiftsData);
+  console.log("Holidays Data: ", holidaysData);
 
   return (
     <div className="App">
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-      {/* {isLoggedIn ? (
-        <Welcome />
-      ) : (
-        <Auth currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      )} */}
-
       {currentPage === "auth" && (
-        <Auth currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <Auth
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          loggedInUser={loggedInUser}
+          setLoggedInUser={setLoggedInUser}
+        />
       )}
-      {currentPage === "welcome" && <Welcome />}
-      {currentPage === "holidays" && <HolidayView employeeData={employeeData} />}
-      {currentPage === "shift_manager" && <ShiftView />}
-
-      {/* {currentView === "home" && <Home />}
-        {currentView === "about" && <About />}
-        {currentView === "topics" && <Topics />} */}
-
-      {/* <ShiftView /> */}
+      {currentPage === "welcome" && <Welcome loggedInUser={loggedInUser} />}
+      {currentPage === "holidays" && (
+        <HolidayView holidaysData={holidaysData} employeeData={employeeData} />
+      )}
+      {currentPage === "shift_manager" && <ShiftView shiftsData={shiftsData} />}
     </div>
   );
 }

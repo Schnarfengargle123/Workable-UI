@@ -22,22 +22,22 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import CreateHoliday from "./CreateHoliday";
 import HolidayRecord from "./HolidayRecord";
 
-export default () => {
-  const [holidayData, setHolidayData] = useState();
+export default ({ holidaysData }) => {
+  // const [holidayData, setHolidayData] = useState();
 
-  useEffect(() => {
-    let tempHolidayData;
+  // useEffect(() => {
+  //   let tempHolidayData;
 
-    axios
-      .get("/holidays")
-      .then((response) => (tempHolidayData = response.data))
-      .then(() => {
-        console.log("tempHolidayData: ", tempHolidayData);
-        setHolidayData([...tempHolidayData]);
-        // setHolidayData(tempHolidayData);
-      })
-      .then(() => console.log(holidayData));
-  }, []);
+  //   axios
+  //     .get("/holidays")
+  //     .then((response) => (tempHolidayData = response.data))
+  //     .then(() => {
+  //       console.log("tempHolidayData: ", tempHolidayData);
+  //       // setHolidayData([...tempHolidayData]);
+  //       setHolidayData(tempHolidayData);
+  //     })
+  //     .then(() => console.log(holidayData));
+  // }, []);
 
   return (
     // <h2>Content</h2>
@@ -46,7 +46,7 @@ export default () => {
       <Box w="90%" px="1rem">
         <Flex direction="column">
           <CreateHoliday
-            holidayData
+            holidaysData
             employeeInput
             holidayStartDateInput
             holidayEndDateInput
@@ -66,15 +66,16 @@ export default () => {
               </Tr>
             </Thead>
 
-            {holidayData.map((holiday) => (
+            {holidaysData.map((holiday) => (
               <HolidayRecord
                 id={holiday.id}
                 startDate={holiday.start_date}
                 endDate={holiday.end_date}
-                employeeId={holiday.employee.employeeId}
+                approved
+                employeeId={holiday.employeeId}
                 // employee={shift.employee.username}
                 // holidayData={holidayData}
-                holidayData
+                // holidaysData
               />
             ))}
 

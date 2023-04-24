@@ -14,7 +14,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-export default ({ currentPage, setCurrentPage }) => {
+export default ({
+  currentPage,
+  setCurrentPage,
+  loggedInUser,
+  setLoggedInUser,
+}) => {
   // export default (props) => {
   const [authState, setAuthState] = useState("Login");
 
@@ -23,8 +28,61 @@ export default ({ currentPage, setCurrentPage }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [isValidEmail, setIsValidEmail] = useState();
+  const [isValidUsername, setIsValidUsername] = useState();
+  const [isValidPassword, setIsValidPassword] = useState();
+  const [isValidConfirmPassword, setIsValidConfirmPassword] = useState();
+
+  const [emailValidationMessage, setEmailValidationMessage] = useState();
+  const [usernameValidationMessage, setUsernameValidationMessage] = useState();
+  const [passwordValidationMessage, setPasswordValidationMessage] = useState();
+  const [
+    confirmPasswordValidationMessage,
+    setConfirmPasswordValidationMessage,
+  ] = useState();
+
+  const debounce = (func, delay = 1000) => {
+    let timeoutInstance;
+
+    return (...args) => {
+      console.log("User is typing...");
+      clearTimeout(timeoutInstance);
+
+      timeoutInstance = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
+
+    // setIsValidEmail(false);
+
+    debounce(() => {
+      console.log("Debounce function called!");
+
+      if (email.length < 7) {
+        // || email.includes('@')
+        setIsValidEmail(false);
+        setEmailValidationMessage("Please enter a valid email");
+      } else if (!email) {
+        setIsValidEmail(false);
+        setEmailValidationMessage("Field must not be empty");
+      }
+    }, 1000);
+
+    // setTimeout(() => {
+    //   if (email.length < 7) {
+    //     setIsValidEmail(false);
+    //     setEmailValidationMessage("Please enter a valid email");
+    //   } else if (!email) {
+    //     setIsValidEmail(false);
+    //     setEmailValidationMessage("Field must not be empty");
+    //   }
+    // }, 1000);
+
+    console.log(email);
   };
 
   const handleUsername = (e) => {
@@ -34,13 +92,41 @@ export default ({ currentPage, setCurrentPage }) => {
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
+
   const handleConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
   };
 
-  const loggedInUser = { email, username, password, confirmPassword };
+  // const loggedInUser = { email, username, password, confirmPassword };
+  // setLoggedInUser({ email, username, password, confirmPassword });
 
   const authenticate = () => {
+    setLoggedInUser({ email, username, password, confirmPassword });
+
+    // Using Axios
+
+    axios({
+      method: "post",
+      url: "/auth",
+      data: loggedInUser,
+    })
+      .then((response) => {
+        console.log(response);
+
+        const token = response.data.token;
+        console.log("TOKEN: ", token);
+
+        document.cookie = `token=${token}`;
+      })
+      .catch((err) => console.error(err));
+
+    setCurrentPage("welcome");
+
+    console.log("loggedInUser");
+    console.log(loggedInUser);
+
+    // ==================================================
+
     // Using FetchAPI
 
     // fetch("https://g5jd7s-8080.csb.app/auth", {
@@ -62,7 +148,7 @@ export default ({ currentPage, setCurrentPage }) => {
 
     // ==================================================
 
-    // Using Axios
+    // Using Axios (Alternative Syntax)
 
     // axios
     //   .post("/auth", loggedInUser, {
@@ -81,28 +167,6 @@ export default ({ currentPage, setCurrentPage }) => {
     //   .catch((err) => console.error(err));
 
     // ==================================================
-
-    // Using Axios (Alternative Syntax)
-
-    axios({
-      method: "post",
-      url: "/auth",
-      data: loggedInUser,
-    })
-      .then((response) => {
-        console.log(response);
-
-        const token = response.data.token;
-        console.log("TOKEN: ", token);
-
-        document.cookie = `token=${token}`;
-      })
-      .catch((err) => console.error(err));
-
-    setCurrentPage("welcome");
-
-    console.log("loggedInUser");
-    console.log(loggedInUser);
   };
 
   return (
@@ -132,8 +196,12 @@ export default ({ currentPage, setCurrentPage }) => {
                   onChange={handleEmail}
                   value={loggedInUser.email}
                 />
-                <FormHelperText color="orange.300" mt="1rem">
-                  Please enter your email here.
+                <FormHelperText
+                  color="orange.400"
+                  mt="1rem"
+                  visibility={isValidEmail ? "hidden" : "visible"}
+                >
+                  {emailValidationMessage}
                 </FormHelperText>
               </FormControl>
 
@@ -146,8 +214,12 @@ export default ({ currentPage, setCurrentPage }) => {
                     onChange={handleUsername}
                     value={loggedInUser.username}
                   />
-                  <FormHelperText color="orange.300" mt="1rem">
-                    Please enter your email here.
+                  <FormHelperText
+                    color="orange.400"
+                    mt="1rem"
+                    visibility={isValidUsername ? "hidden" : "visible"}
+                  >
+                    {usernameValidationMessage}
                   </FormHelperText>
                 </FormControl>
               )}
@@ -160,8 +232,12 @@ export default ({ currentPage, setCurrentPage }) => {
                   onChange={handlePassword}
                   value={loggedInUser.password}
                 />
-                <FormHelperText color="orange.300" mt="1rem">
-                  Please enter your password here.
+                <FormHelperText
+                  color="orange.400"
+                  mt="1rem"
+                  visibility={isValidPassword ? "hidden" : "visible"}
+                >
+                  {passwordValidationMessage}
                 </FormHelperText>
               </FormControl>
 
@@ -174,8 +250,15 @@ export default ({ currentPage, setCurrentPage }) => {
                     onChange={handleConfirmPassword}
                     value={loggedInUser.confirmPassword}
                   />
-                  <FormHelperText color="orange.300" mt="1rem">
-                    Please enter your email here.
+                  <FormHelperText
+                    color="orange.400"
+                    mt="1rem"
+                    visibility={isValidConfirmPassword ? "hidden" : "visible"}
+                  >
+                    {/* {isValidConfirmPassword ? "" : "Passwords must match"} */}
+                    {/* {!isValidConfirmPassword && "Passwords must match"} */}
+                    
+                    {confirmPasswordValidationMessage}
                   </FormHelperText>
                 </FormControl>
               )}

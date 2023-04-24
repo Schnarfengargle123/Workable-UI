@@ -5,6 +5,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import axios from "axios";
 
 export default ({
+  id,
   employee,
   date,
   startTime,
@@ -21,7 +22,6 @@ export default ({
   const currentStartTime = useRef();
   const currentEndTime = useRef();
   const currentDuration = useRef();
-  
 
   const updatedEmployee = useRef();
   const updatedShiftDate = useRef();
@@ -45,14 +45,17 @@ export default ({
   };
 
   const handleUpdateShift = () => {
+    let shiftId = id;
+    // shiftId = parseInt(shiftId);
+
     setUpdatedRecord({
       employee: currentEmployee.current.innerHTML,
       shiftDate: currentShiftDate.current.value,
       startTime: currentStartTime.current.value,
       endTime: currentEndTime.current.value,
       duration: currentDuration.current.innerHTML,
-    })
-    
+    });
+
     axios({
       method: "put",
       url: "/update_shift",
@@ -68,10 +71,14 @@ export default ({
   };
 
   const handleDeleteShift = () => {
+    let shiftId = id;
+
+    console.log(typeof shiftId);
+    // shiftId = parseInt(shiftId);
+
     axios({
       method: "delete",
-      url: "/delete_shift/:id",
-      // data: loggedInUser,
+      url: `/delete_shift/${shiftId}`,
     })
       .then((response) => {
         console.log(response);

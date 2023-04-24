@@ -4,7 +4,78 @@ import { DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
-export default () => {
+export default ({ employeeData, startDate, endDate, approved, employeeId }) => {
+  const [isEdit, setIsEdit] = useState(false);
+
+  const [currentRecord, setCurrentRecord] = useState();
+  const [updatedRecord, setUpdatedRecord] = useState();
+
+  const currentEmployee = useRef();
+  const currentStartDate = useRef();
+  const currentEndDate = useRef();
+  const currentApproved = useRef();
+
+  const updatedEmployee = useRef();
+  const updatedStartDate = useRef();
+  const updatedEndDate = useRef();
+
+  const getCurrentRecordValues = () => {
+    tempCurrentRecord = {
+      employee: currentEmployee.current.innerHTML,
+      startDate: currentStartDate.current.innerHTML,
+      endDate: currentEndTime.current.innerHTML,
+      approved: currentApproved.current.innerHTML,
+    };
+
+    console.log(tempCurrentRecord);
+    setCurrentRecord(tempCurrentRecord);
+  };
+
+  const handleUpdateHoliday = () => {
+    // let holidayId = id;
+
+    setUpdatedRecord({
+      employee: currentEmployee.current.innerHTML,
+      startDate: currentStartDate.current.innerHTML,
+      endDate: currentEndTime.current.innerHTML,
+      approved: currentApproved.current.innerHTML,
+    });
+
+    axios({
+      method: "put",
+      url: "/update_holiday",
+      data: updatedRecord,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => console.error(err));
+
+    console.log("Record Updated!");
+    setIsEdit(false);
+  };
+
+  const handleDeleteHoliday = () => {
+    let holidayId = id;
+
+    console.log(typeof shiftId);
+    // shiftId = parseInt(shiftId);
+
+    axios({
+      method: "delete",
+      url: `/delete_holiday/${holidayId}`,
+    })
+      .then((response) => {
+        console.log(response);
+
+        // const token = response.json();
+        // console.log("TOKEN: ", token);
+
+        // document.cookie = `token=${token}`;
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <Tbody>
       <Tr>
@@ -34,7 +105,7 @@ export default () => {
           </Select>
         ) : (
           <Td id="employee">
-            <Avatar ref={currentEmployee} name={employee} />
+            {/* <Avatar ref={currentEmployee} name={employee} /> */}
             {/*
              `ref` needs to be set to the aria-label attribute of the 
              <div>, which is rendered in the real DOM, in order to obtain
@@ -48,38 +119,30 @@ export default () => {
         </Td> */}
 
         {isEdit ? (
-          <Input ref={updatedShiftDate} type="date" w="10rem" mr="2rem" />
+          <Input ref={updatedStartDate} type="date" w="10rem" mr="2rem" />
         ) : (
-          <Td ref={currentShiftDate} id="shift-date">
-            {date}
+          <Td ref={currentStartDate} id="shift-date">
+            {startDate}
           </Td>
         )}
 
         {isEdit ? (
-          <Input ref={updatedStartTime} type="time" w="6rem" mr="4rem" />
+          <Input ref={updatedEndDate} type="time" w="6rem" mr="4rem" />
         ) : (
-          <Td ref={currentStartTime} id="start-time">
-            {startTime}
+          <Td ref={currentEndDate} id="start-time">
+            {endDate}
           </Td>
         )}
 
-        {isEdit ? (
-          <Input ref={updatedEndTime} type="time" w="6rem" mr="6rem" />
-        ) : (
-          <Td ref={currentEndTime} id="end-time">
-            {finishTime}
-          </Td>
-        )}
-
-        <Td ref={currentDuration} id="duration">
-          {duration}
+        <Td id="duration" ref={currentApproved}>
+          {approved}
         </Td>
 
         <Td>
           <Button
             onClick={
               isEdit
-                ? handleUpdateShifthandleUpdateShift()
+                ? handleUpdateHoliday()
                 : () => {
                     getCurrentRecordValues();
                     setIsEdit(true);
@@ -92,7 +155,7 @@ export default () => {
         </Td>
 
         <Td>
-          <DeleteIcon onClick={handleDeleteShift} />
+          <DeleteIcon onClick={handleDeleteHoliday} />
         </Td>
       </Tr>
     </Tbody>

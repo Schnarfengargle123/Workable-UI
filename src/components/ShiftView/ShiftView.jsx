@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import ShiftFilter from "./ShiftFilter";
 import CreateShift from "./CreateShift";
 import ShiftRecord from "./ShiftRecord";
 
