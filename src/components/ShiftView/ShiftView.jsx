@@ -23,43 +23,43 @@ import {
 
 // Table,Thead, Tbody,Tfoot,Tr,Th,Td,TableCaption,TableContainer
 
-export default () => {
-  const [shiftData, setShiftData] = useState([]);
-  const [employeeData, setEmployeeData] = useState([]);
+export default ({ shiftsData, employeeData }) => {
+  // const [shiftData, setShiftData] = useState([]);
+  // const [employeeData, setEmployeeData] = useState([]);
 
   // // const [employeeInputValue, setEmployeeInputValue] = useState();
   // // const [shiftDateInputValue, setShiftDateInputValue] = useState();
   // // const [startTimeInputValue, setStartTimeInputValue] = useState();
   // // const [endTimeInputValue, setEndTimeInputValue] = useState();
 
-  useEffect(() => {
-    let tempShiftData;
+  // useEffect(() => {
+  //   let tempShiftData;
 
-    fetch("https://g5jd7s-8080.csb.app/shifts")
-      .then((response) => response.json())
-      .then((data) => {
-        tempShiftData = data;
-      })
-      .then(() => {
-        console.log(tempShiftData);
-        setShiftData(tempShiftData);
-      })
-      .catch((err) => console.error(err));
+  //   fetch("https://g5jd7s-8080.csb.app/shifts")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       tempShiftData = data;
+  //     })
+  //     .then(() => {
+  //       console.log(tempShiftData);
+  //       setShiftData(tempShiftData);
+  //     })
+  //     .catch((err) => console.error(err));
 
-    let tempData;
+  //   let tempData;
 
-    axios
-      .get("/staff")
-      .then((response) => {
-        console.log(response);
-        tempData = response.data;
-      })
-      .then(() => {
-        console.log(tempData);
-        setEmployeeData(tempData);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  //   axios
+  //     .get("/staff")
+  //     .then((response) => {
+  //       console.log(response);
+  //       tempData = response.data;
+  //     })
+  //     .then(() => {
+  //       console.log(tempData);
+  //       setEmployeeData(tempData);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   // useEffect(() => {
   //   let tempData;
@@ -105,7 +105,7 @@ export default () => {
               </Tr>
             </Thead>
 
-            {shiftData.map((shift) => (
+            {shiftsData.map((shift) => (
               <ShiftRecord
                 id={shift.id}
                 date={shift.date}

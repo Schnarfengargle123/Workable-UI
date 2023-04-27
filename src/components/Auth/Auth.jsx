@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import {
@@ -19,6 +19,8 @@ export default ({
   setCurrentPage,
   loggedInUser,
   setLoggedInUser,
+  isLoggedIn,
+  setIsLoggedIn,
 }) => {
   // export default (props) => {
   const [authState, setAuthState] = useState("Login");
@@ -40,6 +42,25 @@ export default ({
     confirmPasswordValidationMessage,
     setConfirmPasswordValidationMessage,
   ] = useState();
+
+  // useEffect(() => {
+  //   setLoggedInUser({ email, username, password, confirmPassword });
+  // }, [email, username, password, confirmPassword]);
+
+  useEffect(() => {
+    console.log("Email: ", email);
+    console.log("Username: ", username);
+    console.log("Password: ", password);
+    console.log("Confirm Password: ", confirmPassword);
+
+    setLoggedInUser({ email, username, password, confirmPassword });
+
+    console.log("loggedInUser: ", loggedInUser);
+  }, [email, username, password, confirmPassword]);
+
+  useEffect(() => {
+    console.log(loggedInUser);
+  }, [loggedInUser]);
 
   const debounce = (func, delay = 1000) => {
     let timeoutInstance;
@@ -82,7 +103,7 @@ export default ({
     //   }
     // }, 1000);
 
-    console.log(email);
+    // console.log(email);
   };
 
   const handleUsername = (e) => {
@@ -101,14 +122,15 @@ export default ({
   // setLoggedInUser({ email, username, password, confirmPassword });
 
   const authenticate = () => {
-    setLoggedInUser({ email, username, password, confirmPassword });
-
     // Using Axios
 
     axios({
       method: "post",
       url: "/auth",
       data: loggedInUser,
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
       .then((response) => {
         console.log(response);
@@ -120,10 +142,14 @@ export default ({
       })
       .catch((err) => console.error(err));
 
-    setCurrentPage("welcome");
-
     console.log("loggedInUser");
     console.log(loggedInUser);
+
+    // This logic should be conditional, based on whether or not we recieved a 200 res
+    setIsLoggedIn(true);
+    console.log(isLoggedIn);
+
+    setCurrentPage("welcome");
 
     // ==================================================
 
@@ -194,7 +220,8 @@ export default ({
                   type="email"
                   placeholder="user1@email.com"
                   onChange={handleEmail}
-                  value={loggedInUser.email}
+                  // value={loggedInUser.email}
+                  value={email}
                 />
                 <FormHelperText
                   color="orange.400"
@@ -212,6 +239,7 @@ export default ({
                     type="text"
                     placeholder="user1"
                     onChange={handleUsername}
+                    // value={loggedInUser.username}
                     value={loggedInUser.username}
                   />
                   <FormHelperText
@@ -230,7 +258,8 @@ export default ({
                   type="password"
                   placeholder="••••••••••••"
                   onChange={handlePassword}
-                  value={loggedInUser.password}
+                  // value={loggedInUser.password}
+                  value={password}
                 />
                 <FormHelperText
                   color="orange.400"
@@ -257,7 +286,7 @@ export default ({
                   >
                     {/* {isValidConfirmPassword ? "" : "Passwords must match"} */}
                     {/* {!isValidConfirmPassword && "Passwords must match"} */}
-                    
+
                     {confirmPasswordValidationMessage}
                   </FormHelperText>
                 </FormControl>

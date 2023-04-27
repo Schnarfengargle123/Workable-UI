@@ -16,7 +16,12 @@ axios.defaults.baseURL = "https://g5jd7s-8080.csb.app";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [currentPage, setCurrentPage] = useState("auth");
   const [employeeData, setEmployeeData] = useState();
@@ -55,7 +60,14 @@ export default function App() {
 
   return (
     <div className="App">
-      <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Navigation
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        loggedInUser={loggedInUser}
+        setLoggedInUser={setLoggedInUser}
+      />
 
       {currentPage === "auth" && (
         <Auth
@@ -63,13 +75,17 @@ export default function App() {
           setCurrentPage={setCurrentPage}
           loggedInUser={loggedInUser}
           setLoggedInUser={setLoggedInUser}
+          isLoggedIn
+          setIsLoggedIn={setIsLoggedIn}
         />
       )}
       {currentPage === "welcome" && <Welcome loggedInUser={loggedInUser} />}
       {currentPage === "holidays" && (
         <HolidayView holidaysData={holidaysData} employeeData={employeeData} />
       )}
-      {currentPage === "shift_manager" && <ShiftView shiftsData={shiftsData} />}
+      {currentPage === "shift_manager" && (
+        <ShiftView shiftsData={shiftsData} employeeData={employeeData} />
+      )}
     </div>
   );
 }
