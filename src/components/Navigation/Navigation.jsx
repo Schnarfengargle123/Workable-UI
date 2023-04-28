@@ -23,7 +23,7 @@ export default ({
         <Link
           fontSize="x-large"
           onClick={() =>
-            isLoggedIn ? setCurrentPage("welcome") : setCurretPage("auth")
+            isLoggedIn ? setCurrentPage("welcome") : setCurrentPage("auth")
           }
         >
           Workable

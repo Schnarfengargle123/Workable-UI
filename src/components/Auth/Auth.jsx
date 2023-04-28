@@ -140,7 +140,15 @@ export default ({
 
         document.cookie = `token=${token}`;
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
+
+        // console.error(err);
+      });
 
     console.log("loggedInUser");
     console.log(loggedInUser);
