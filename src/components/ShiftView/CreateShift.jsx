@@ -16,7 +16,6 @@ export default ({ employeeData }) => {
   // const employeeInput = useRef();
   const dateInput = useRef();
   const startTimeInput = useRef();
-  // const finishTimeInput = useRef();
   const finishTimeInput = useRef();
 
   const [selectedEmployee, setSelectedEmployee] = useState();
@@ -43,26 +42,6 @@ export default ({ employeeData }) => {
     const shiftDuration = getShiftDuration();
     console.log("shiftDuration: ", shiftDuration);
 
-    // const startDateTime = `${dateInput.current.value} ${startTimeInput.current.value}:00`;
-    // const endDateTime = `${dateInput.current.value} ${startTimeInput.current.value}:00`;
-
-    // console.log("startDateTime: ", startDateTime);
-    // console.log("endDateTime: ", endDateTime);
-
-    // const dateStart = new Date(startDateTime);
-    // const dateEnd = new Date(endDateTime);
-
-    // console.log("dateStart: ", dateStart);
-    // console.log("dateEnd: ", dateEnd);
-
-    // const timeDifference =
-    //   // Math.abs(dateStart.getTime() - dateEnd.getTime()) / 36e5;
-    //   Math.floor(Math.abs(dateStart.getTime() - dateEnd.getTime()) / 3600000);
-    // const duration = `${timeDifference}h`;
-
-    // console.log("Time Difference: ", timeDifference);
-    // console.log("Duration: ", duration);
-
     // ============================================================
 
     const createdShift = {
@@ -73,9 +52,6 @@ export default ({ employeeData }) => {
       duration: shiftDuration,
       // employee: parseInt(employeeInput.current.value),
       employee: parseInt(employeeInput),
-      // date: dateInput.current.value,
-      // startTime: startTimeInput.current.value,
-      // finishTime: finishTimeInput.current.value,
     };
 
     console.log("Created Shift: ", createdShift);
@@ -108,12 +84,11 @@ export default ({ employeeData }) => {
     //   // finishTime: finishTimeInput.current.value,
     // };
 
-    const queryString = "?start_time=09:00&finish_time=18:00";
+    const queryString = "?start_time=09:00&finish_time=18:00&date=2023_05_26;";
 
     axios({
       method: "get",
       url: `/shifts${queryString}`,
-      // data: createdShift,
     })
       .then((response) => {
         tempFilteredData = response.data;
@@ -204,7 +179,6 @@ export default ({ employeeData }) => {
               value={employee.id}
             >
               {employee.username}
-              {/* <Avatar size="2xs" /> */}
             </option>
           ))}
         </Select>

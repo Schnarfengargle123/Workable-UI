@@ -8,7 +8,10 @@ export default ({
   loggedInUser,
   setLoggedInUser,
 }) => {
-  const handleLogout = () => setCurrentPage("auth");
+  const handleLogout = () => {
+    setCurrentPage("auth");
+    setIsLoggedIn(false);
+  };
 
   return (
     <Box

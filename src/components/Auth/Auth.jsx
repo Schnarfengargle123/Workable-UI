@@ -54,8 +54,6 @@ export default ({
     console.log("Confirm Password: ", confirmPassword);
 
     setLoggedInUser({ email, username, password, confirmPassword });
-
-    console.log("loggedInUser: ", loggedInUser);
   }, [email, username, password, confirmPassword]);
 
   useEffect(() => {
@@ -124,6 +122,18 @@ export default ({
   const authenticate = () => {
     // Using Axios
 
+    //     const {data} = await axios.post('https://httpbin.org/post', {
+    //     firstName: 'Fred',
+    //     lastName: 'Flintstone',
+    //     orders: [1, 2, 3],
+    //     photo: document.querySelector('#fileInput').files
+    //   }, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   }
+    // )
+
     axios({
       method: "post",
       url: "/auth",
@@ -133,31 +143,165 @@ export default ({
       },
     })
       .then((response) => {
-        console.log(response);
+        console.log("RESPONSE: ", response);
+        console.log(response.data.username);
+        const fetchedUsername = response.data.username;
+        // setUsername(response.data.username);
+        // setUsername(fetchedUsername);
+        setUsername(response.data.username);
 
-        const token = response.data.token;
-        console.log("TOKEN: ", token);
-
-        document.cookie = `token=${token}`;
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
+        if (fetchedUsername) {
+          setLoggedInUser({
+            email,
+            username: fetchedUsername,
+            password,
+            confirmPassword,
+          });
         }
 
-        // console.error(err);
+        // setLoggedInUser({ email, username, password, confirmPassword });
+      })
+      .then(() => {
+        // setLoggedInUser({ email, username, password, confirmPassword });
+        console.log("THEN: ", loggedInUser);
+      })
+      .then(() => {
+        console.log("THEN AGAIN: ", loggedInUser);
       });
 
-    console.log("loggedInUser");
-    console.log(loggedInUser);
+    // setLoggedInUser({ email, username, password, confirmPassword });
 
-    // This logic should be conditional, based on whether or not we recieved a 200 res
+    console.log("NO ERRORS!");
     setIsLoggedIn(true);
-    console.log(isLoggedIn);
-
+    console.log("isLoggedIn: ", isLoggedIn);
+    console.log("loggedInUser: ", loggedInUser);
     setCurrentPage("welcome");
+
+    // axios
+    //   .post("/auth", loggedInUser, {
+    //     headers: { "Content-Type": "application/json" },
+    //   })
+    //   .then((response) => {
+    //     console.log("RESPONSE: ", response);
+    //     console.log("We just logged in!");
+    //   });
+
+    // fetch("https://g5jd7s-8080.csb.app/auth", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   body: JSON.stringify(loggedInUser),
+    // })
+    //   .then((response) => {
+    //     console.log("Response: ", response);
+
+    //     // const token = response.json();
+    //     // console.log("TOKEN: ", token);
+
+    //     // document.cookie = `token=${token}`;
+    //   })
+    //   .catch((err) => console.error(err));
+
+    // fetch("https://g5jd7s-8080.csb.app/auth", {
+    //   method: "POST",
+    //   headers: { "Content-type": "application/json" },
+    //   body: JSON.stringify(loggedInUser),
+    // }).then((response) => {
+    //   console.log("RESPONSE: ", response);
+    // });
+
+    // axios.post("/auth", loggedInUser).then((response) => {
+    //   console.log("RESPONSE: ", response);
+    //   console.log("We just logged in!");
+    // });
+
+    // axios
+    //   .post("/auth", loggedInUser)
+    //   .then((response) => {
+    //     console.log("AUTH RESPONSE: ", response);
+
+    //     const token = response.data.token;
+    //     console.log("TOKEN: ", token);
+
+    //     document.cookie = `token=${token}`;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+
+    // if (err) {
+    //   console.log(err.response.data);
+    //   console.log(err.response.status);
+    //   console.log(err.response.headers);
+    // }
+
+    // else {
+    //   console.log("NO ERRORS!");
+    //   setIsLoggedIn(true);
+    //   console.log("isLoggedIn: ", isLoggedIn);
+    //   console.log("loggedInUser: ", loggedInUser);
+    //   setCurrentPage("welcome");
+    // }
+    // });
+
+    // setLoggedInUser({ email, username, password, confirmPassword });
+
+    // console.log("NO ERRORS!");
+    // setIsLoggedIn(true);
+    // console.log("isLoggedIn: ", isLoggedIn);
+    // console.log("loggedInUser: ", loggedInUser);
+    // setCurrentPage("welcome");
+
+    //   axios.post('/user', {
+    //   firstName: 'Fred',
+    //   lastName: 'Flintstone'
+    // })
+    // .then(function (response) {
+    //   console.log(response);
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // });
+
+    // .then((response) => {
+    //   console.log(response);
+
+    //   const token = response.data.token;
+    //   console.log("TOKEN: ", token);
+
+    //   document.cookie = `token=${token}`;
+    // })
+    // .catch((err) => {
+    //   console.log(err.toJSON());
+
+    //   if (err) {
+    //     console.log(err.response.data);
+    //     console.log(err.response.status);
+    //     console.log(err.response.headers);
+    //   } else if (!err) {
+    //     console.log("NO ERRORS!");
+    //     setIsLoggedIn(true);
+    //     console.log("isLoggedIn: ", isLoggedIn);
+    //     console.log("loggedInUser: ", loggedInUser);
+    //     setCurrentPage("welcome");
+    //   }
+
+    //     console.log("loggedInUser");
+    // console.log(loggedInUser);
+
+    // // This logic should be conditional, based on whether or not we recieved a 200 res
+    // setIsLoggedIn(true);
+    // console.log(isLoggedIn);
+
+    // setCurrentPage("welcome");
+
+    // console.error(err);
+    // });
+
+    // setIsLoggedIn(true);
+    // console.log("isLoggedIn: ", isLoggedIn);
+    // console.log("loggedInUser: ", loggedInUser);
+    // setCurrentPage("welcome");
 
     // ==================================================
 
@@ -248,7 +392,7 @@ export default ({
                     placeholder="user1"
                     onChange={handleUsername}
                     // value={loggedInUser.username}
-                    value={loggedInUser.username}
+                    value={username}
                   />
                   <FormHelperText
                     color="orange.400"
@@ -285,7 +429,7 @@ export default ({
                     type="email"
                     placeholder="••••••••••••"
                     onChange={handleConfirmPassword}
-                    value={loggedInUser.confirmPassword}
+                    value={confirmPassword}
                   />
                   <FormHelperText
                     color="orange.400"

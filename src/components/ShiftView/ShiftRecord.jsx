@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Tbody, Tr, Td, Avatar, Button, Select, Input } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
@@ -17,64 +17,195 @@ export default ({
   const [currentRecord, setCurrentRecord] = useState();
   const [updatedRecord, setUpdatedRecord] = useState();
 
-  const currentEmployee = useRef();
+  let employeeInput = "";
+
+  // const currentEmployee = useRef();
+  // const currentEmployee = useRef();
   const currentShiftDate = useRef();
   const currentStartTime = useRef();
   const currentEndTime = useRef();
   const currentDuration = useRef();
 
-  const updatedEmployee = useRef();
-  const updatedShiftDate = useRef();
-  const updatedStartTime = useRef();
-  const updatedEndTime = useRef();
-  const updatedDuration = useRef();
+  const updatedId = useRef("");
+  const updatedEmployee = useRef("");
+  const updatedShiftDate = useRef("");
+  const updatedStartTime = useRef("");
+  const updatedEndTime = useRef("");
+  // const updatedDuration = useRef();
 
   let tempCurrentRecord;
 
+  useEffect(
+    () => console.log("Current Record (useEffect): ", currentRecord),
+    [currentRecord]
+  );
+
+  useEffect(
+    () => console.log("Updated Record: (useEffect): ", updatedRecord),
+    [updatedRecord]
+  );
+
+  // useEffect(() => {
+  //   console.log("Current Employee: ", id);
+  //   console.log("Current Shift Date: ", currentShiftDate.current.innerHTML);
+  //   console.log("Current Start Time: ", currentStartTime.current.innerHTML);
+  //   console.log("Current End Time: ", currentEndTime.current.innerHTML);
+  //   console.log("Current Duration: ", currentDuration.current.innerHTML);
+  //   console.log("Current Record", currentRecord);
+  // }, [
+  //   id,
+  //   currentShiftDate,
+  //   currentStartTime,
+  //   currentEndTime,
+  //   currentDuration,
+  //   currentRecord,
+  // ]);
+
+  // useEffect(() => {
+  //   setUpdatedRecord({
+  //     id,
+  //     shiftDate: updatedShiftDate.current.innerHTML, // Acessed prior to being set
+  //     startTime: updatedStartTime.current.value, // All return undefined
+  //     endTime: updatedEndTime.current.value,
+  //     duration: getShiftDuration(),
+  //     employee: parseInt(employeeInput),
+  //   });
+  // }, [id, updatedShiftDate, updatedStartTime, updatedEndTime, employeeInput]);
+
   const getCurrentRecordValues = () => {
-    tempCurrentRecord = {
-      employee: currentEmployee.current.innerHTML,
+    // const tempRecord = {
+    //   id,
+    //   shiftDate: currentShiftDate.current.innerHTML,
+    //   startTime: currentStartTime.current.innerHTML,
+    //   endTime: currentEndTime.current.innerHTML,
+    //   duration: currentDuration.current.innerHTML,
+    //   employee,
+    // };
+
+    // console.log("Temp Record: ", tempRecord);
+
+    setCurrentRecord({
+      id,
       shiftDate: currentShiftDate.current.innerHTML,
       startTime: currentStartTime.current.innerHTML,
       endTime: currentEndTime.current.innerHTML,
       duration: currentDuration.current.innerHTML,
-    };
+      employee,
+    });
 
-    console.log(tempCurrentRecord);
-    setCurrentRecord(tempCurrentRecord);
+    console.log("Current Record: ", currentRecord);
+
+    // tempCurrentRecord = {
+    //   id,
+    //   shiftDate: currentShiftDate.current.innerHTML,
+    //   startTime: currentStartTime.current.innerHTML,
+    //   endTime: currentEndTime.current.innerHTML,
+    //   duration: currentDuration.current.innerHTML,
+    //   employee: currentEmployee.current.innerHTML,
+    // };
+
+    // console.log(tempCurrentRecord);
+    // setCurrentRecord(tempCurrentRecord);
+  };
+
+  const getShiftDuration = () => {
+    // BUG: Shift duration calculates incorrect shift durations, if endtime is during
+    // the next day, i.e, a night shift will of 22:00 - 06:00 will resolve to "16h"
+
+    // FIX: Implement a start date, AND an end date, to compensate for night shifts.
+    // { id: 10, shiftDate: "2023-05-14", startTime: "23:00", endTime: "01:00", duration: "22h", employee: 1 }
+
+    const startDateTime = new Date(
+      `${updatedShiftDate.current.value} ${updatedStartTime.current.value}:00`
+    );
+
+    console.log("Start Date Time: ", startDateTime);
+
+    const endDateTime = new Date(
+      `${updatedShiftDate.current.value} ${updatedEndTime.current.value}:00`
+    );
+
+    console.log("End Date Time: ", endDateTime);
+
+    const shiftDuration = `${Math.floor(
+      Math.abs(startDateTime.getTime() - endDateTime.getTime()) / 3600000
+    )}h`;
+
+    return shiftDuration;
+  };
+
+  const handleSelectEmployee = (e) => {
+    // POTENTIAL BUG: If employee `id` field is not equal to index position,
+    // i.e, admin has id of 1, but 3rd element in array, then selectedInputValue
+    // assigns the shift instance to the wrong user (the user with an id of 3).
+    // id should in fact be equal to 1, to assign the shift to the correct user,
+    // i.e, the admin user.
+
+    const selectedInputValue = e.target[e.target.selectedIndex].value;
+
+    console.log(
+      "Value: " +
+        e.target.value +
+        "; Display: " +
+        e.target[e.target.selectedIndex].text +
+        "."
+    );
+
+    console.log(selectedInputValue);
+
+    employeeInput = selectedInputValue;
+
+    return selectedInputValue;
+  };
+
+  const handleEditShift = () => {
+    // const currentShiftId = e.target.value;
+    getCurrentRecordValues();
+    setIsEdit(true);
+    console.log("isEdit: ", isEdit);
+
+    // return currentShiftId;
   };
 
   const handleUpdateShift = () => {
-    let shiftId = id;
-    // shiftId = parseInt(shiftId);
+    // We need to make an API call to the backend, by sending the ID of the shift,
+    // and then return a response, which contains the user, along with their username,
+    // and then store the username into the to be updated shift username.
 
     setUpdatedRecord({
-      employee: currentEmployee.current.innerHTML,
-      shiftDate: currentShiftDate.current.value,
-      startTime: currentStartTime.current.value,
-      endTime: currentEndTime.current.value,
-      duration: currentDuration.current.innerHTML,
+      id,
+      shiftDate: updatedShiftDate.current.value, // Acessed prior to being set
+      startTime: updatedStartTime.current.value, // All return undefined
+      endTime: updatedEndTime.current.value,
+      duration: getShiftDuration(),
+      employee: parseInt(employeeInput),
     });
 
-    axios({
-      method: "put",
-      url: "/update_shift",
-      data: updatedRecord,
-    })
-      .then((response) => {
-        console.log(response);
+    console.log("Updated Record: ", updatedRecord);
+
+    if (updatedRecord)
+      axios({
+        method: "put",
+        url: "/update_shift",
+        data: updatedRecord,
       })
-      .catch((err) => console.error(err));
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.error(err));
 
     console.log("Record Updated!");
     setIsEdit(false);
+  };
+
+  const handleRevertShift = () => {
+    console.log("Undo shift");
   };
 
   const handleDeleteShift = () => {
     let shiftId = id;
 
     console.log(typeof shiftId);
-    // shiftId = parseInt(shiftId);
 
     axios({
       method: "delete",
@@ -94,33 +225,25 @@ export default ({
   return (
     <Tbody>
       <Tr>
-        {/* <Select placeholder="Choose Employee" w="12rem">
-          {employeeData.map((employee) => (
-            <option value="Employee">
-              {employee.username}
-              <Avatar size="2xs" />
-            </option>
-          ))}
-        </Select>
-
-        <Input type="date" w="10rem" mr="2rem" />
-        <Input type="time" w="8rem" mr="4rem" />
-        <Input type="time" w="8rem" mr="6rem" /> */}
-
-        {/* IS EDIT */}
-
         {isEdit ? (
-          <Select placeholder="Choose Employee" w="10rem">
+          <Select
+            onChange={handleSelectEmployee}
+            placeholder="Choose Employee"
+            ref={updatedId}
+            name={id}
+            w="10rem"
+          >
             {employeeData.map((employee) => (
-              <option ref={updatedEmployee} value="Employee">
+              <option ref={updatedEmployee} value={employee.id}>
                 {employee.username}
-                <Avatar size="2xs" />
               </option>
             ))}
           </Select>
         ) : (
           <Td id="employee">
-            <Avatar ref={currentEmployee} name={employee} />
+            <Avatar name={employee} title={id} />
+            {/* <Avatar ref={currentEmployee} name={employee} title={id} /> */}
+            {/* <label style={{ display: "block" }}>{employee.username}</label> */}
             {/*
              `ref` needs to be set to the aria-label attribute of the 
              <div>, which is rendered in the real DOM, in order to obtain
@@ -128,10 +251,6 @@ export default ({
              */}
           </Td>
         )}
-
-        {/* <Td>
-          <Avatar />
-        </Td> */}
 
         {isEdit ? (
           <Input ref={updatedShiftDate} type="date" w="10rem" mr="2rem" />
@@ -162,18 +281,14 @@ export default ({
         </Td>
 
         <Td>
-          <Button
-            onClick={
-              isEdit
-                ? handleUpdateShifthandleUpdateShift()
-                : () => {
-                    getCurrentRecordValues();
-                    setIsEdit(true);
-                    console.log("isEdit: ", isEdit);
-                  }
-            }
-          >
+          <Button onClick={isEdit ? handleUpdateShift : handleEditShift}>
             {isEdit ? "Update" : "Edit"}
+          </Button>
+        </Td>
+
+        <Td>
+          <Button onClick={isEdit ? () => setIsEdit(false) : handleRevertShift}>
+            {isEdit ? "Cancel" : "Undo"}
           </Button>
         </Td>
 

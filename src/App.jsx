@@ -16,12 +16,13 @@ axios.defaults.baseURL = "https://g5jd7s-8080.csb.app";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState({
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
+  // const [loggedInUser, setLoggedInUser] = useState({
+  //   email: "",
+  //   username: "",
+  //   password: "",
+  //   confirmPassword: "",
+  // });
+  const [loggedInUser, setLoggedInUser] = useState();
 
   const [currentPage, setCurrentPage] = useState("auth");
   const [employeeData, setEmployeeData] = useState();
