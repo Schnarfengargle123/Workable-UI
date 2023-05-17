@@ -19,7 +19,9 @@ export default ({ employeeData }) => {
   useEffect(() => console.log(employeeData), []);
 
   const createHoliday = () => {
-    const createdHoliday = {};
+    const createdHoliday = {
+      
+    };
 
     axios({
       method: "post",

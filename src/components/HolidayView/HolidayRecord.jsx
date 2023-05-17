@@ -1,65 +1,162 @@
-import { useState, useRef } from "react";
-import { Tbody, Tr, Td, Avatar, Button, Select, Input } from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
+import {
+  Checkbox,
+  Tbody,
+  Tr,
+  Td,
+  Avatar,
+  Button,
+  Select,
+  Input,
+} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 import axios from "axios";
 
-export default ({ employeeData, startDate, endDate, approved, employeeId }) => {
+export default ({
+  id,
+  startDate,
+  endDate,
+  approved,
+  employeeId,
+  employeeData,
+  employee,
+  holidaysData,
+  setHolidaysData,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
-
   const [currentRecord, setCurrentRecord] = useState();
   const [updatedRecord, setUpdatedRecord] = useState();
 
-  const currentEmployee = useRef();
+  let employeeInput = "";
+
+  // const currentEmployee = useRef();
   const currentStartDate = useRef();
   const currentEndDate = useRef();
   const currentApproved = useRef();
 
-  const updatedEmployee = useRef();
-  const updatedStartDate = useRef();
-  const updatedEndDate = useRef();
+  const updatedId = useRef("");
+  const updatedEmployee = useRef("");
+  const updatedStartDate = useRef("");
+  const updatedEndDate = useRef("");
+  const updatedApproved = useRef("");
+
+  useEffect(
+    () => console.log("Current Record (useEffect): ", currentRecord),
+    [currentRecord]
+  );
+
+  useEffect(
+    () => console.log("Updated Record: (useEffect): ", updatedRecord),
+    [updatedRecord]
+  );
+
+  useEffect(() => {
+    if (updatedRecord)
+      axios({
+        method: "put",
+        url: "/update_holiday",
+        data: updatedRecord,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.error(err));
+
+    console.log("Updated Record: (useEffect): ", updatedRecord);
+  }, [updatedRecord]);
+
+  useEffect(() => {
+    console.log("isEdit: ", isEdit);
+  }, [isEdit]);
 
   const getCurrentRecordValues = () => {
-    tempCurrentRecord = {
-      employee: currentEmployee.current.innerHTML,
+    let approvalStatus;
+
+    if (currentApproved.current.innerHTML === "Approved") {
+      approvalStatus = true;
+    } else {
+      approvalStatus = false;
+    }
+
+    setCurrentRecord({
+      id,
+      // Suggestion: Rename to `initialStartDate` to avoid confusion
       startDate: currentStartDate.current.innerHTML,
-      endDate: currentEndTime.current.innerHTML,
-      approved: currentApproved.current.innerHTML,
-    };
-
-    console.log(tempCurrentRecord);
-    setCurrentRecord(tempCurrentRecord);
-  };
-
-  const handleUpdateHoliday = () => {
-    // let holidayId = id;
-
-    setUpdatedRecord({
-      employee: currentEmployee.current.innerHTML,
-      startDate: currentStartDate.current.innerHTML,
-      endDate: currentEndTime.current.innerHTML,
-      approved: currentApproved.current.innerHTML,
+      endDate: currentEndDate.current.innerHTML,
+      approved: approvalStatus,
+      employee,
     });
 
-    axios({
-      method: "put",
-      url: "/update_holiday",
-      data: updatedRecord,
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => console.error(err));
+    console.log("Current Record: ", currentRecord);
+  };
+
+  const handleSelectEmployee = (e) => {
+    // POTENTIAL BUG: If employee `id` field is not equal to index position,
+    // i.e, admin has id of 1, but 3rd element in array, then selectedInputValue
+    // assigns the shift instance to the wrong user (the user with an id of 3).
+    // id should in fact be equal to 1, to assign the shift to the correct user,
+    // i.e, the admin user.
+
+    const selectedInputValue = e.target[e.target.selectedIndex].value;
+
+    console.log(
+      "Value: " +
+        e.target.value +
+        "; Display: " +
+        e.target[e.target.selectedIndex].text +
+        "."
+    );
+
+    console.log(selectedInputValue);
+
+    employeeInput = selectedInputValue;
+
+    return selectedInputValue;
+  };
+
+  // const handleEditHoliday = () => {
+  //   getCurrentRecordValues();
+  //   setIsEdit(true);
+  //   console.log("isEdit: ", isEdit);
+  // };
+
+  const handleUpdateHoliday = () => {
+    // We need to make an API call to the backend, by sending the ID of the shift,
+    // and then return a response, which contains the user, along with their username,
+    // and then store the username into the to be updated shift username.
+
+    let approvalStatus;
+
+    if (updatedApproved.current.value) approvalStatus = true;
+    else approvalStatus = false;
+
+    setUpdatedRecord({
+      id,
+      startDate: updatedStartDate.current.value,
+      endDate: updatedEndDate.current.value,
+      // approved: updatedApproved.current.innerHTML,
+      approved: approvalStatus,
+      employee: parseInt(employeeInput),
+      // employee: parseInt(employeeInput),
+    });
+
+    console.log("Updated Record: ", updatedRecord);
 
     console.log("Record Updated!");
     setIsEdit(false);
   };
 
+  const handleRevertHoliday = () => {
+    console.log("Undo update holiday");
+  };
+
   const handleDeleteHoliday = () => {
     let holidayId = id;
 
-    console.log(typeof shiftId);
-    // shiftId = parseInt(shiftId);
+    setHolidaysData(holidaysData.filter((holiday) => holiday.id !== holidayId));
+
+    console.log(typeof holidayId);
 
     axios({
       method: "delete",
@@ -95,9 +192,15 @@ export default ({ employeeData, startDate, endDate, approved, employeeId }) => {
         {/* IS EDIT */}
 
         {isEdit ? (
-          <Select placeholder="Choose Employee" w="10rem">
+          <Select
+            onChange={handleSelectEmployee}
+            placeholder="Choose Employee"
+            ref={updatedId}
+            name={id}
+            w="10rem"
+          >
             {employeeData.map((employee) => (
-              <option ref={updatedEmployee} value="Employee">
+              <option ref={updatedEmployee} value={employee.id}>
                 {employee.username}
                 <Avatar size="2xs" />
               </option>
@@ -105,7 +208,8 @@ export default ({ employeeData, startDate, endDate, approved, employeeId }) => {
           </Select>
         ) : (
           <Td id="employee">
-            {/* <Avatar ref={currentEmployee} name={employee} /> */}
+            {/* <Avatar name={employee} title={id} /> */}
+            <h1>{employee}</h1>
             {/*
              `ref` needs to be set to the aria-label attribute of the 
              <div>, which is rendered in the real DOM, in order to obtain
@@ -121,36 +225,50 @@ export default ({ employeeData, startDate, endDate, approved, employeeId }) => {
         {isEdit ? (
           <Input ref={updatedStartDate} type="date" w="10rem" mr="2rem" />
         ) : (
-          <Td ref={currentStartDate} id="shift-date">
+          <Td ref={currentStartDate} id="start-date">
             {startDate}
           </Td>
         )}
 
         {isEdit ? (
-          <Input ref={updatedEndDate} type="time" w="6rem" mr="4rem" />
+          <Input ref={updatedEndDate} type="date" w="6rem" mr="4rem" />
         ) : (
-          <Td ref={currentEndDate} id="start-time">
+          <Td ref={currentEndDate} id="end-date">
             {endDate}
           </Td>
         )}
 
-        <Td id="duration" ref={currentApproved}>
-          {approved}
-        </Td>
+        {/* BUG: useRef */}
+
+        {isEdit ? (
+          <Checkbox ref={updatedApproved} size="lg" value />
+        ) : (
+          <Td id="approved" ref={currentApproved}>
+            {approved ? "Approved" : "Pending"}
+          </Td>
+        )}
 
         <Td>
           <Button
             onClick={
               isEdit
-                ? handleUpdateHoliday()
+                ? handleUpdateHoliday
                 : () => {
                     getCurrentRecordValues();
                     setIsEdit(true);
-                    console.log("isEdit: ", isEdit);
+                    // console.log("isEdit: ", isEdit);
                   }
             }
           >
             {isEdit ? "Update" : "Edit"}
+          </Button>
+        </Td>
+
+        <Td>
+          <Button
+            onClick={isEdit ? () => setIsEdit(false) : handleRevertHoliday}
+          >
+            {isEdit ? "Cancel" : "Undo"}
           </Button>
         </Td>
 

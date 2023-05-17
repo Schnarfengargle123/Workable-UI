@@ -22,7 +22,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import CreateHoliday from "./CreateHoliday";
 import HolidayRecord from "./HolidayRecord";
 
-export default ({ holidaysData }) => {
+export default ({ holidaysData, setHolidaysData, employeeData }) => {
   // const [holidayData, setHolidayData] = useState();
 
   // useEffect(() => {
@@ -46,10 +46,13 @@ export default ({ holidaysData }) => {
       <Box w="90%" px="1rem">
         <Flex direction="column">
           <CreateHoliday
-            holidaysData
-            employeeInput
-            holidayStartDateInput
-            holidayEndDateInput
+            employeeData={employeeData}
+            holidaysData={holidaysData}
+            // employeeInput
+            // holidayStartDateInput
+            // holidayEndDateInput
+            // approvedInput
+            setHolidaysData={setHolidaysData}
           />
         </Flex>
 
@@ -71,11 +74,12 @@ export default ({ holidaysData }) => {
                 id={holiday.id}
                 startDate={holiday.start_date}
                 endDate={holiday.end_date}
-                approved
+                approved={holiday.approved}
                 employeeId={holiday.employeeId}
-                // employee={shift.employee.username}
-                // holidayData={holidayData}
-                // holidaysData
+                employee={holiday.employee.username}
+                holidaysData={holidaysData}
+                setHolidaysData={setHolidaysData}
+                employeeData={employeeData}
               />
             ))}
 

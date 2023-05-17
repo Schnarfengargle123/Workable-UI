@@ -29,6 +29,8 @@ export default ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [upcomingShifts, setUpcomingShifts] = useState("");
+  const [upcomingHolidays, setUpcomingHolidays] = useState("");
 
   const [isValidEmail, setIsValidEmail] = useState();
   const [isValidUsername, setIsValidUsername] = useState();
@@ -52,9 +54,25 @@ export default ({
     console.log("Username: ", username);
     console.log("Password: ", password);
     console.log("Confirm Password: ", confirmPassword);
+    console.log("Upcoming Shifts: ", upcomingShifts);
+    console.log("Upcoming Holidays: ", upcomingHolidays);
 
-    setLoggedInUser({ email, username, password, confirmPassword });
-  }, [email, username, password, confirmPassword]);
+    setLoggedInUser({
+      email,
+      username,
+      password,
+      confirmPassword,
+      upcomingShifts,
+      upcomingHolidays,
+    });
+  }, [
+    email,
+    username,
+    password,
+    confirmPassword,
+    // upcomingShifts,
+    // upcomingHolidays,
+  ]);
 
   useEffect(() => {
     console.log(loggedInUser);
@@ -149,6 +167,8 @@ export default ({
         // setUsername(response.data.username);
         // setUsername(fetchedUsername);
         setUsername(response.data.username);
+        setUpcomingShifts(response.data.upcomingShifts);
+        setUpcomingHolidays(response.data.upcomingHolidays);
 
         if (fetchedUsername) {
           setLoggedInUser({
@@ -156,6 +176,10 @@ export default ({
             username: fetchedUsername,
             password,
             confirmPassword,
+            // upcomingShifts,
+            // upcomingHolidays,
+            upcomingShifts: response.data.upcomingShifts,
+            upcomingHolidays: response.data.upcomingHolidays,
           });
         }
 
@@ -426,7 +450,7 @@ export default ({
                 <FormControl>
                   <FormLabel>Confirm Password</FormLabel>
                   <Input
-                    type="email"
+                    type="password"
                     placeholder="••••••••••••"
                     onChange={handleConfirmPassword}
                     value={confirmPassword}
@@ -452,8 +476,9 @@ export default ({
 
               <Button
                 bgColor="transparent"
-                _hover={"background: transparent;"}
-                _active={"background: transparent;"}
+                // _hover={"background: transparent;"} // Fails test
+                // _active={"background: transparent;"} // Fails test
+                background="transparent"
                 fontWeight="medium"
                 onClick={() => {
                   {

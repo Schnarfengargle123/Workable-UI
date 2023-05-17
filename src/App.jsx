@@ -7,8 +7,10 @@ import Navigation from "./components/Navigation/Navigation";
 import Welcome from "./components/Welcome/Welcome";
 import Auth from "./components/Auth/Auth";
 import HolidayView from "./components/HolidayView/HolidayView";
-
+import MyProfile from "./components/MyProfile/MyProfile";
 import ShiftView from "./components/ShiftView/ShiftView";
+
+import Test from "./components/Test/Test";
 
 axios.defaults.baseURL = "https://g5jd7s-8080.csb.app";
 // axios.defaults.baseURL = "http://localhost:8080.csb.app";
@@ -55,12 +57,23 @@ export default function App() {
       .catch((err) => console.log(err));
   }, []);
 
+  // useEffect(() => axios
+  //     .get("/shifts")
+  //     .then((response) => {
+  //       console.log("Fetching shiftsData: ", response);
+  //       setShiftsData(response.data);
+  //     })
+  //     .catch((err) => console.log(err)), [createShiftHandler, handleUpdateShift, handleRevertShift, handleDeleteShift]);
+
   console.log("Employee Data: ", employeeData);
   console.log("Shifts Data: ", shiftsData);
   console.log("Holidays Data: ", holidaysData);
 
   return (
     <div className="App">
+      {/* <h2>Test</h2> */}
+      <Test />
+
       <Navigation
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -81,8 +94,19 @@ export default function App() {
         />
       )}
       {currentPage === "welcome" && <Welcome loggedInUser={loggedInUser} />}
+      {currentPage === "my_profile" && (
+        <MyProfile
+          holidaysData={holidaysData}
+          employeeData={employeeData}
+          loggedInUser={loggedInUser}
+        />
+      )}
       {currentPage === "holidays" && (
-        <HolidayView holidaysData={holidaysData} employeeData={employeeData} />
+        <HolidayView
+          holidaysData={holidaysData}
+          setHolidaysData={setHolidaysData}
+          employeeData={employeeData}
+        />
       )}
       {currentPage === "shift_manager" && (
         <ShiftView shiftsData={shiftsData} employeeData={employeeData} />

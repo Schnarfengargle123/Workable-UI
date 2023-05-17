@@ -24,7 +24,7 @@ import {
 // Table,Thead, Tbody,Tfoot,Tr,Th,Td,TableCaption,TableContainer
 
 export default ({ shiftsData, employeeData }) => {
-  // const [shiftData, setShiftData] = useState([]);
+  // const [currentShiftsData, setCurrentShiftData] = useState(shiftsData);
   // const [employeeData, setEmployeeData] = useState([]);
 
   // // const [employeeInputValue, setEmployeeInputValue] = useState();
@@ -81,13 +81,13 @@ export default ({ shiftsData, employeeData }) => {
     <Center mt="4rem">
       <Box w="90%" px="1rem">
         <Flex direction="column">
-          {/* <ShiftFilter /> */}
           <CreateShift
             employeeData={employeeData}
-            employeeInput
-            shiftDateInput
-            startTimeInput
-            endTimeInput
+            shiftsData={shiftsData}
+            // employeeInput
+            // shiftDateInput
+            // startTimeInput
+            // endTimeInput
           />
         </Flex>
 
@@ -100,6 +100,7 @@ export default ({ shiftsData, employeeData }) => {
                 <Th>Start Time</Th>
                 <Th>End Time</Th>
                 <Th>Duration</Th>
+                <Th></Th>
                 <Th></Th>
                 <Th></Th>
               </Tr>

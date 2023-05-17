@@ -33,8 +33,11 @@ export default ({
         </Link>
 
         {isLoggedIn && (
-          <Box w="15%">
+          <Box w="20%">
             <Flex direction="row" justify="space-around" align="center">
+              <Link onClick={() => setCurrentPage("my_profile")}>
+                My Profile
+              </Link>
               <Link onClick={() => setCurrentPage("holidays")}>Holidays</Link>
               <Link
                 onClick={() => {

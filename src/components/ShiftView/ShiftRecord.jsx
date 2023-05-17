@@ -45,6 +45,32 @@ export default ({
     [updatedRecord]
   );
 
+  useEffect(() => {
+    if (updatedRecord)
+      axios({
+        method: "put",
+        url: "/update_shift",
+        data: updatedRecord,
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.error(err));
+
+    console.log("Updated Record: (useEffect): ", updatedRecord);
+  }, [updatedRecord]);
+
+  // if (updatedRecord)
+  //     axios({
+  //       method: "put",
+  //       url: "/update_shift",
+  //       data: updatedRecord,
+  //     })
+  //       .then((response) => {
+  //         console.log(response);
+  //       })
+  //       .catch((err) => console.error(err));
+
   // useEffect(() => {
   //   console.log("Current Employee: ", id);
   //   console.log("Current Shift Date: ", currentShiftDate.current.innerHTML);
@@ -134,6 +160,8 @@ export default ({
     return shiftDuration;
   };
 
+  // Let's test this logic using Jest
+
   const handleSelectEmployee = (e) => {
     // POTENTIAL BUG: If employee `id` field is not equal to index position,
     // i.e, admin has id of 1, but 3rd element in array, then selectedInputValue
@@ -175,7 +203,7 @@ export default ({
     setUpdatedRecord({
       id,
       shiftDate: updatedShiftDate.current.value, // Acessed prior to being set
-      startTime: updatedStartTime.current.value, // All return undefined
+      startTime: updatedStartTime.current.value,
       endTime: updatedEndTime.current.value,
       duration: getShiftDuration(),
       employee: parseInt(employeeInput),
@@ -183,23 +211,39 @@ export default ({
 
     console.log("Updated Record: ", updatedRecord);
 
-    if (updatedRecord)
-      axios({
-        method: "put",
-        url: "/update_shift",
-        data: updatedRecord,
-      })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((err) => console.error(err));
+    // if (updatedRecord) {
+    //   console.log("Updated the shift record!");
+    // } else {
+    //   console.log("Not updated yet!");
+    // }
+
+    // if (updatedRecord)
+    //   axios({
+    //     method: "put",
+    //     url: "/update_shift",
+    //     data: updatedRecord,
+    //   })
+    //     .then((response) => {
+    //       console.log(response);
+    //     })
+    //     .catch((err) => console.error(err));
+
+    // axios({
+    //   method: "put",
+    //   url: "/update_shift",
+    //   data: updatedRecord,
+    // })
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((err) => console.error(err));
 
     console.log("Record Updated!");
     setIsEdit(false);
   };
 
   const handleRevertShift = () => {
-    console.log("Undo shift");
+    console.log("Undo update shift");
   };
 
   const handleDeleteShift = () => {

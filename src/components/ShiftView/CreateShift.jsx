@@ -11,7 +11,7 @@ import {
 
 import axios from "axios";
 
-export default ({ employeeData }) => {
+export default ({ employeeData, shiftsData }) => {
   let employeeInput = "";
   // const employeeInput = useRef();
   const dateInput = useRef();
@@ -21,23 +21,40 @@ export default ({ employeeData }) => {
   const [selectedEmployee, setSelectedEmployee] = useState();
   const [filteredShiftData, setFilteredShiftData] = useState();
 
+  useEffect(() => console.log("Shifts Data (Create Shift): ", shiftsData));
+
+  const getShiftDuration = () => {
+    const startDateTime = new Date(
+      `${dateInput.current.value} ${startTimeInput.current.value}:00`
+    );
+    const endDateTime = new Date(
+      `${dateInput.current.value} ${finishTimeInput.current.value}:00 `
+    );
+
+    const shiftDuration = `${Math.floor(
+      Math.abs(startDateTime.getTime() - endDateTime.getTime()) / 3600000
+    )}h`;
+
+    return shiftDuration;
+  };
+
   const createShiftHandler = () => {
     // Calculate shift duration
 
-    const getShiftDuration = () => {
-      const startDateTime = new Date(
-        `${dateInput.current.value} ${startTimeInput.current.value}:00`
-      );
-      const endDateTime = new Date(
-        `${dateInput.current.value} ${finishTimeInput.current.value}:00 `
-      );
+    // const getShiftDuration = () => {
+    //   const startDateTime = new Date(
+    //     `${dateInput.current.value} ${startTimeInput.current.value}:00`
+    //   );
+    //   const endDateTime = new Date(
+    //     `${dateInput.current.value} ${finishTimeInput.current.value}:00 `
+    //   );
 
-      const shiftDuration = `${Math.floor(
-        Math.abs(startDateTime.getTime() - endDateTime.getTime()) / 3600000
-      )}h`;
+    //   const shiftDuration = `${Math.floor(
+    //     Math.abs(startDateTime.getTime() - endDateTime.getTime()) / 3600000
+    //   )}h`;
 
-      return shiftDuration;
-    };
+    //   return shiftDuration;
+    // };
 
     const shiftDuration = getShiftDuration();
     console.log("shiftDuration: ", shiftDuration);
@@ -57,7 +74,7 @@ export default ({ employeeData }) => {
     console.log("Created Shift: ", createdShift);
 
     console.log("INPUTS");
-    console.log(employeeInput.current);
+    // console.log(employeeInput.current);
     console.log(dateInput.current);
     console.log(startTimeInput.current);
     console.log(finishTimeInput.current);
