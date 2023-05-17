@@ -13,7 +13,7 @@ import ShiftView from "./components/ShiftView/ShiftView";
 import Test from "./components/Test/Test";
 
 axios.defaults.baseURL = "https://g5jd7s-8080.csb.app";
-// axios.defaults.baseURL = "http://localhost:8080";
+// axios.defaults.baseURL = "http://localhost:3000";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
