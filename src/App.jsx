@@ -72,8 +72,7 @@ export default function App() {
   return (
     <div className="App">
       {/* <h2>Test</h2> */}
-      <Test />
-
+      <Test /> {/* use me for testing */}
       <Navigation
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
@@ -82,7 +81,6 @@ export default function App() {
         loggedInUser={loggedInUser}
         setLoggedInUser={setLoggedInUser}
       />
-
       {currentPage === "auth" && (
         <Auth
           currentPage={currentPage}
