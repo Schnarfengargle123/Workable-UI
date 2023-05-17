@@ -120,9 +120,10 @@ export default ({ employeeData, holidaysData, setHolidaysData }) => {
       })
       .then(() => {
         console.log(tempFilteredData);
-        setFilteredHolidayData(tempFilteredData);
+        setHolidaysData(tempFilteredData);
+        // setFilteredHolidayData(tempFilteredData);
       })
-      .then(() => console.log("Filtered Shift Data", filteredHolidayData))
+      .then(() => console.log("Filtered Shift Data", holidaysData))
       .catch((err) => console.error(err));
   };
 
